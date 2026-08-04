@@ -1,13 +1,18 @@
-from __future__ import annotations
 from fastapi import APIRouter
-from app.presentation.schemas.feedback import FeedbackCreateSchema, FeedbackStatsSchema
+from typing import Dict
 
-router = APIRouter(tags=["Feedback"])
+router = APIRouter()
 
-@router.post("/feedback")
-async def submit_feedback(body: FeedbackCreateSchema):
-    return {"status": "ok"}
+@router.post("/")
+async def submit_feedback(data: Dict):
+    return {"status": "success"}
 
-@router.get("/feedback/stats/{route_hash}", response_model=FeedbackStatsSchema)
+@router.get("/stats/{route_hash}")
 async def get_feedback_stats(route_hash: str):
-    return FeedbackStatsSchema(route_hash=route_hash, avg_overall=5.0, avg_comfort=5.0, avg_safety=5.0, avg_accuracy=5.0, recommend_pct=100.0, total_count=1)
+    return {
+        "route_hash": route_hash,
+        "average_rating": 4.5,
+        "total_reviews": 12,
+        "safety_score_avg": 4.8,
+        "comfort_score_avg": 4.2
+    }

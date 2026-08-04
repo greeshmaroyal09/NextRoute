@@ -1,24 +1,24 @@
-from __future__ import annotations
 from fastapi import APIRouter
+from typing import List, Dict
 
-router = APIRouter(tags=["History"])
+router = APIRouter()
 
-@router.get("/history/recent")
-async def get_recent_history(session_id: str, limit: int = 10):
-    return []
+@router.get("/recent")
+async def get_recent_history(session_id: str):
+    return {"history": []}
 
-@router.post("/routes/save")
-async def save_route():
-    return {"status": "ok"}
+@router.post("/save")
+async def save_route(session_id: str, route_data: Dict):
+    return {"status": "success", "id": "123"}
 
-@router.get("/routes/saved")
+@router.get("/saved")
 async def get_saved_routes(session_id: str):
-    return []
+    return {"saved_routes": []}
 
-@router.put("/routes/{id}/favourite")
-async def toggle_favourite(id: str):
-    return {"status": "ok"}
+@router.put("/{route_id}/favourite")
+async def toggle_favourite(route_id: str):
+    return {"status": "success", "favourite": True}
 
-@router.delete("/routes/{id}")
-async def delete_route(id: str):
-    return {"status": "ok"}
+@router.delete("/{route_id}")
+async def delete_saved_route(route_id: str):
+    return {"status": "deleted"}

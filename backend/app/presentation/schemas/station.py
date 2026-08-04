@@ -1,27 +1,16 @@
-from __future__ import annotations
 from pydantic import BaseModel
+from typing import Optional, List
 
-class StationSchema(BaseModel):
+class StationInfo(BaseModel):
     id: str
     code: str
     name: str
-    city: str | None = None
-    state: str | None = None
-    latitude: float
-    longitude: float
-    station_type: str
-    zone: str | None = None
+    city: Optional[str]
+    state: str
+    type: str
+    lat: float
+    lon: float
 
-class AutocompleteItem(BaseModel):
-    code: str
-    name: str
-    station_type: str
-    state: str | None = None
-    type: str = 'TRAIN'
-
-class AutocompleteResponse(BaseModel):
-    suggestions: list[AutocompleteItem]
-
-class NearbyResponse(BaseModel):
-    stations: list[StationSchema]
-    bus_stops: list[StationSchema]
+class StationListResponse(BaseModel):
+    stations: List[StationInfo]
+    bus_stops: List[StationInfo]

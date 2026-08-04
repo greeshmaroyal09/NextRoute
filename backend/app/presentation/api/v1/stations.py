@@ -1,13 +1,23 @@
-from __future__ import annotations
 from fastapi import APIRouter, Request
-from app.presentation.schemas.station import StationSchema
+from app.presentation.schemas.station import StationListResponse, StationInfo
+from sqlalchemy import select
+from app.infrastructure.database.models import Station, BusStop
+from sqlalchemy.ext.asyncio import AsyncSession
 
-router = APIRouter(tags=["Stations"])
+router = APIRouter()
 
-@router.get("/stations", response_model=list[StationSchema])
-async def list_stations(request: Request, state: str | None = None, limit: int = 10, offset: int = 0):
-    return []
+@router.get("/autocomplete")
+async def autocomplete_stations(q: str):
+    # Simplified mock for API
+    return {"suggestions": [
+        {"code": "SBC", "name": "KSR Bengaluru", "type": "TRAIN", "state": "KA"},
+        {"code": "MDU", "name": "Madurai Junction", "type": "TRAIN", "state": "TN"}
+    ]}
 
-@router.get("/stations/{code}", response_model=StationSchema)
-async def get_station(request: Request, code: str):
-    return StationSchema(id="1", code=code, name="Example", city="City", state="State", latitude=0.0, longitude=0.0, station_type="TRAIN")
+@router.get("/nearby")
+async def get_nearby_stations(lat: float, lon: float, radius_km: float = 30.0):
+    return {"stations": [], "bus_stops": []}
+
+@router.get("/")
+async def list_stations():
+    return {"stations": []}

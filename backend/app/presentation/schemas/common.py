@@ -1,17 +1,13 @@
-from __future__ import annotations
 from pydantic import BaseModel
+from typing import Optional, List, Dict, Any
 
-class ErrorResponse(BaseModel):
-    detail: str
-    status_code: int
+class BaseResponse(BaseModel):
+    success: bool = True
+    message: Optional[str] = None
+    data: Optional[Dict[str, Any]] = None
 
-class PaginationMeta(BaseModel):
+class PaginatedResponse(BaseModel):
     total: int
     page: int
-    per_page: int
-
-class HealthResponse(BaseModel):
-    status: str
-    version: str
-    graph_nodes: int
-    graph_edges: int
+    size: int
+    items: List[Any]
