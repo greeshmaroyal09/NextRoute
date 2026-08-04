@@ -1,6 +1,9 @@
 from __future__ import annotations
+
 from dataclasses import dataclass
-from app.domain.value_objects.enums import TrainType, BusOperator, BusType
+
+from app.domain.value_objects.enums import BusOperator, BusType, TrainType
+
 
 @dataclass
 class TrainRoute:
@@ -13,7 +16,8 @@ class TrainRoute:
     def runs_on_day(self, day_index: int) -> bool:
         if len(self.runs_on) != 7:
             return False
-        return self.runs_on[day_index] == '1'
+        return self.runs_on[day_index] == "1"
+
 
 @dataclass
 class BusRoute:

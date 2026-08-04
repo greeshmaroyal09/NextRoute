@@ -1,6 +1,6 @@
 import os
 
-SCHEMAS_COMMON = '''from pydantic import BaseModel
+SCHEMAS_COMMON = """from pydantic import BaseModel
 from typing import Optional, List, Dict, Any
 
 class BaseResponse(BaseModel):
@@ -13,9 +13,9 @@ class PaginatedResponse(BaseModel):
     page: int
     size: int
     items: List[Any]
-'''
+"""
 
-SCHEMAS_STATION = '''from pydantic import BaseModel
+SCHEMAS_STATION = """from pydantic import BaseModel
 from typing import Optional, List
 
 class StationInfo(BaseModel):
@@ -31,9 +31,9 @@ class StationInfo(BaseModel):
 class StationListResponse(BaseModel):
     stations: List[StationInfo]
     bus_stops: List[StationInfo]
-'''
+"""
 
-SCHEMAS_JOURNEY = '''from pydantic import BaseModel
+SCHEMAS_JOURNEY = """from pydantic import BaseModel
 from typing import Optional, List, Dict
 from datetime import datetime
 from .station import StationInfo
@@ -112,9 +112,9 @@ class JourneyResponse(BaseModel):
     badges: List[str]
     recommendation_sentence: str
     transfer_difficulties: List[TransferDifficultyResultSchema]
-'''
+"""
 
-SCHEMAS_SEARCH = '''from pydantic import BaseModel
+SCHEMAS_SEARCH = """from pydantic import BaseModel
 from typing import Optional, List, Dict
 from .journey import JourneyResponse
 
@@ -128,9 +128,9 @@ class SearchRequest(BaseModel):
 class SearchResponse(BaseModel):
     journeys: List[JourneyResponse]
     meta: Dict
-'''
+"""
 
-USECASES_SEARCH = '''from app.engines.route_engine import RouteEngine
+USECASES_SEARCH = """from app.engines.route_engine import RouteEngine
 from app.engines.scoring_engine import ScoringEngine
 from app.engines.explainability_engine import ExplainabilityEngine
 from app.engines.recommendation_engine import RecommendationEngine
@@ -209,9 +209,9 @@ class SearchRoutesUseCase:
             ))
             
         return dtos
-'''
+"""
 
-API_SEARCH = '''from fastapi import APIRouter, Depends, HTTPException
+API_SEARCH = """from fastapi import APIRouter, Depends, HTTPException
 from typing import Dict, Any
 from app.presentation.schemas.search import SearchRequest, SearchResponse
 from app.application.use_cases.search_routes import SearchRoutesUseCase
@@ -236,9 +236,9 @@ async def search_routes(req: SearchRequest, request: Request):
             "search_id": "req-12345"
         }
     )
-'''
+"""
 
-API_HEALTH = '''from fastapi import APIRouter
+API_HEALTH = """from fastapi import APIRouter
 from pydantic import BaseModel
 
 class HealthResponse(BaseModel):
@@ -250,24 +250,33 @@ router = APIRouter()
 @router.get("/", response_model=HealthResponse)
 async def health_check():
     return HealthResponse(status="ok", version="1.0.0")
-'''
+"""
+
 
 def write_files():
     os.makedirs("app/presentation/schemas", exist_ok=True)
     os.makedirs("app/presentation/api/v1", exist_ok=True)
     os.makedirs("app/application/use_cases", exist_ok=True)
-    
-    with open("app/presentation/schemas/common.py", "w") as f: f.write(SCHEMAS_COMMON)
-    with open("app/presentation/schemas/station.py", "w") as f: f.write(SCHEMAS_STATION)
-    with open("app/presentation/schemas/journey.py", "w") as f: f.write(SCHEMAS_JOURNEY)
-    with open("app/presentation/schemas/search.py", "w") as f: f.write(SCHEMAS_SEARCH)
-    
-    with open("app/application/use_cases/search_routes.py", "w") as f: f.write(USECASES_SEARCH)
-    
-    with open("app/presentation/api/v1/search.py", "w") as f: f.write(API_SEARCH)
-    with open("app/presentation/api/v1/health.py", "w") as f: f.write(API_HEALTH)
-    
+
+    with open("app/presentation/schemas/common.py", "w") as f:
+        f.write(SCHEMAS_COMMON)
+    with open("app/presentation/schemas/station.py", "w") as f:
+        f.write(SCHEMAS_STATION)
+    with open("app/presentation/schemas/journey.py", "w") as f:
+        f.write(SCHEMAS_JOURNEY)
+    with open("app/presentation/schemas/search.py", "w") as f:
+        f.write(SCHEMAS_SEARCH)
+
+    with open("app/application/use_cases/search_routes.py", "w") as f:
+        f.write(USECASES_SEARCH)
+
+    with open("app/presentation/api/v1/search.py", "w") as f:
+        f.write(API_SEARCH)
+    with open("app/presentation/api/v1/health.py", "w") as f:
+        f.write(API_HEALTH)
+
     print("API files written.")
+
 
 if __name__ == "__main__":
     write_files()

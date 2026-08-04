@@ -1,9 +1,16 @@
 from __future__ import annotations
+
 from typing import Any
+
+from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, delete
-from app.domain.interfaces.repositories import ISearchHistoryRepository, ISavedRouteRepository
-from app.infrastructure.database.models import SearchHistory, SavedRoute
+
+from app.domain.interfaces.repositories import (
+    ISavedRouteRepository,
+    ISearchHistoryRepository,
+)
+from app.infrastructure.database.models import SavedRoute, SearchHistory
+
 
 class SearchHistoryRepository(ISearchHistoryRepository):
     def __init__(self, session: AsyncSession):
@@ -16,9 +23,15 @@ class SearchHistoryRepository(ISearchHistoryRepository):
         return data
 
     async def get_recent(self, session_id: str, limit: int) -> list[Any]:
-        stmt = select(SearchHistory).where(SearchHistory.session_id == session_id).order_by(SearchHistory.created_at.desc()).limit(limit)
+        stmt = (
+            select(SearchHistory)
+            .where(SearchHistory.session_id == session_id)
+            .order_by(SearchHistory.created_at.desc())
+            .limit(limit)
+        )
         result = await self.session.execute(stmt)
         return list(result.scalars().all())
+
 
 class SavedRouteRepository(ISavedRouteRepository):
     def __init__(self, session: AsyncSession):
@@ -31,7 +44,11 @@ class SavedRouteRepository(ISavedRouteRepository):
         return data
 
     async def get_all(self, session_id: str) -> list[Any]:
-        stmt = select(SavedRoute).where(SavedRoute.session_id == session_id).order_by(SavedRoute.created_at.desc())
+        stmt = (
+            select(SavedRoute)
+            .where(SavedRoute.session_id == session_id)
+            .order_by(SavedRoute.created_at.desc())
+        )
         result = await self.session.execute(stmt)
         return list(result.scalars().all())
 

@@ -1,11 +1,12 @@
 from fastapi import APIRouter
-from typing import Dict
 
 router = APIRouter()
 
+
 @router.post("/")
-async def submit_feedback(data: Dict):
+async def submit_feedback(data: dict):
     return {"status": "success"}
+
 
 @router.get("/stats/{route_hash}")
 async def get_feedback_stats(route_hash: str):
@@ -14,5 +15,5 @@ async def get_feedback_stats(route_hash: str):
         "average_rating": 4.5,
         "total_reviews": 12,
         "safety_score_avg": 4.8,
-        "comfort_score_avg": 4.2
+        "comfort_score_avg": 4.2,
     }

@@ -1,9 +1,12 @@
 from __future__ import annotations
+
 from dataclasses import dataclass
 from datetime import datetime
 from decimal import Decimal
 from typing import Any
-from app.domain.value_objects.enums import TransportType, SeatStatus, TransferDifficulty
+
+from app.domain.value_objects.enums import SeatStatus, TransferDifficulty, TransportType
+
 
 @dataclass
 class JourneySegment:
@@ -23,11 +26,12 @@ class JourneySegment:
     operator: str | None = None
     seat_status: SeatStatus | None = None
 
+
 @dataclass
 class Journey:
     journey_id: str
     segments: list[JourneySegment]
-    
+
     @property
     def total_duration_minutes(self) -> int:
         if not self.segments:
@@ -41,7 +45,9 @@ class Journey:
 
     @property
     def transfer_count(self) -> int:
-        return len([s for s in self.segments if s.segment_type != TransportType.WALK]) - 1
+        return (
+            len([s for s in self.segments if s.segment_type != TransportType.WALK]) - 1
+        )
 
     @property
     def departure_time(self) -> datetime:
@@ -51,6 +57,7 @@ class Journey:
     def arrival_time(self) -> datetime:
         return self.segments[-1].arrival_time
 
+
 @dataclass
 class ScoredJourney:
     journey: Journey
@@ -58,6 +65,7 @@ class ScoredJourney:
     factor_scores: dict[str, float]
     factor_raw_values: dict[str, Any]
     rank: int
+
 
 @dataclass
 class ExplainReason:
@@ -67,6 +75,7 @@ class ExplainReason:
     impact: str
     strength: str
 
+
 @dataclass
 class TransferDifficultyResult:
     station_name: str
@@ -74,6 +83,7 @@ class TransferDifficultyResult:
     walking_meters: int
     buffer_minutes: int
     walking_minutes: int
+
 
 @dataclass
 class ExplainedJourney:

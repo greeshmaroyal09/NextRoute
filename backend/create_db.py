@@ -1,6 +1,8 @@
+import sys
+
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
-import sys
+
 
 def create_db():
     passwords = ["", "postgres", "admin", "password"]
@@ -12,11 +14,11 @@ def create_db():
                 user="postgres",
                 password=pwd,
                 host="localhost",
-                port="5432"
+                port="5432",
             )
             print(f"Connected with password: '{pwd}'")
             break
-        except Exception as e:
+        except Exception:
             pass
 
     if not conn:
@@ -35,6 +37,7 @@ def create_db():
     finally:
         cursor.close()
         conn.close()
+
 
 if __name__ == "__main__":
     create_db()

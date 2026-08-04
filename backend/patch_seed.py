@@ -4,10 +4,17 @@ with open("app/infrastructure/database/seed.py", "r") as f:
     content = f.read()
 
 # Remove id=str(uuid.uuid4()), for integer PK models
-models_to_fix = ['TrainStop', 'TrainFare', 'BusStopSequence', 'NearbyConnection', 'ScoringWeight', 'SystemSetting']
+models_to_fix = [
+    "TrainStop",
+    "TrainFare",
+    "BusStopSequence",
+    "NearbyConnection",
+    "ScoringWeight",
+    "SystemSetting",
+]
 for model in models_to_fix:
-    pattern = rf'({model}\([^)]*)id=str\(uuid\.uuid4\(\)\),\s*'
-    content = re.sub(pattern, r'\1', content)
+    pattern = rf"({model}\([^)]*)id=str\(uuid\.uuid4\(\)\),\s*"
+    content = re.sub(pattern, r"\1", content)
 
 # Fix BusStopSequence kwargs
 content = content.replace("fare_from_origin=fare", "times=f'{arr}-{dep}', fare=fare")

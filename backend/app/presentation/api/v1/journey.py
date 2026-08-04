@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
-from app.presentation.schemas.journey import JourneyResponse
 
 router = APIRouter()
+
 
 @router.get("/{journey_id}")
 async def get_journey_detail(journey_id: str):

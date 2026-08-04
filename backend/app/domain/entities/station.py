@@ -1,6 +1,9 @@
 from __future__ import annotations
+
 from dataclasses import dataclass
+
 from app.domain.value_objects.enums import StationType
+
 
 @dataclass
 class Station:

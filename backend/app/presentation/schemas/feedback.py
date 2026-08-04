@@ -1,5 +1,7 @@
 from __future__ import annotations
+
 from pydantic import BaseModel
+
 
 class FeedbackCreateSchema(BaseModel):
     route_hash: str
@@ -9,6 +11,7 @@ class FeedbackCreateSchema(BaseModel):
     accuracy_rating: int
     would_recommend: bool
     comments: str | None = None
+
 
 class FeedbackStatsSchema(BaseModel):
     route_hash: str

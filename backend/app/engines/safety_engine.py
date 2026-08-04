@@ -1,6 +1,8 @@
 from __future__ import annotations
+
 from app.domain.entities.journey import Journey
 from app.domain.value_objects.enums import TransportType
+
 
 class SafetyEngine:
     def calculate(self, journey: Journey) -> float:
@@ -15,7 +17,7 @@ class SafetyEngine:
             else:
                 if seg.arrival_time.hour >= 23 or seg.arrival_time.hour <= 4:
                     score -= 0.1
-        
+
         # Transfers penalty
         score -= min(0.4, journey.transfer_count * 0.1)
         return max(0.1, score)

@@ -22,6 +22,7 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 target_metadata = Base.metadata
 
+
 def do_run_migrations(connection):
     context.configure(
         connection=connection,
@@ -48,9 +49,11 @@ async def run_async_migrations() -> None:
         with connectable.connect() as connection:  # type: ignore
             do_run_migrations(connection)
 
+
 def run_migrations_online() -> None:
     """Run migrations in 'online' mode."""
     asyncio.run(run_async_migrations())
+
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode."""
@@ -65,6 +68,7 @@ def run_migrations_offline() -> None:
 
     with context.begin_transaction():
         context.run_migrations()
+
 
 if context.is_offline_mode():
     run_migrations_offline()

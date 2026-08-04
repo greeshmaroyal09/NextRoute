@@ -1,10 +1,13 @@
 from __future__ import annotations
+
 from abc import ABC, abstractmethod
-from typing import Any
 from datetime import date
+from typing import Any
+
+from app.domain.entities.route import BusRoute, TrainRoute
 from app.domain.entities.station import Station
-from app.domain.entities.route import TrainRoute, BusRoute
 from app.domain.value_objects.enums import SeatStatus
+
 
 class IStationRepository(ABC):
     @abstractmethod
@@ -12,7 +15,9 @@ class IStationRepository(ABC):
         pass
 
     @abstractmethod
-    async def get_nearby(self, lat: float, lon: float, radius_km: float) -> list[Station]:
+    async def get_nearby(
+        self, lat: float, lon: float, radius_km: float
+    ) -> list[Station]:
         pass
 
     @abstractmethod
@@ -22,6 +27,7 @@ class IStationRepository(ABC):
     @abstractmethod
     async def list_by_state(self, state: str) -> list[Station]:
         pass
+
 
 class ITrainRouteRepository(ABC):
     @abstractmethod
@@ -36,6 +42,7 @@ class ITrainRouteRepository(ABC):
     async def list_routes_through_station(self, station_code: str) -> list[TrainRoute]:
         pass
 
+
 class IBusRouteRepository(ABC):
     @abstractmethod
     async def get_routes_between(self, from_code: str, to_code: str) -> list[BusRoute]:
@@ -45,6 +52,7 @@ class IBusRouteRepository(ABC):
     async def get_by_operator(self, operator: str) -> list[BusRoute]:
         pass
 
+
 class ISearchHistoryRepository(ABC):
     @abstractmethod
     async def save(self, data: Any) -> Any:
@@ -53,6 +61,7 @@ class ISearchHistoryRepository(ABC):
     @abstractmethod
     async def get_recent(self, session_id: str, limit: int) -> list[Any]:
         pass
+
 
 class ISavedRouteRepository(ABC):
     @abstractmethod
@@ -71,6 +80,7 @@ class ISavedRouteRepository(ABC):
     async def delete(self, id: str) -> bool:
         pass
 
+
 class IFeedbackRepository(ABC):
     @abstractmethod
     async def save(self, data: Any) -> Any:
@@ -80,7 +90,15 @@ class IFeedbackRepository(ABC):
     async def get_stats_by_route_hash(self, route_hash: str) -> Any:
         pass
 
+
 class IAvailabilityProvider(ABC):
     @abstractmethod
-    async def get_availability(self, train_number: str, from_code: str, to_code: str, travel_date: date, travel_class: str) -> SeatStatus:
+    async def get_availability(
+        self,
+        train_number: str,
+        from_code: str,
+        to_code: str,
+        travel_date: date,
+        travel_class: str,
+    ) -> SeatStatus:
         pass
