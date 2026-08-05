@@ -1,25 +1,36 @@
+import contextvars
 from fastapi import Request
 from starlette.middleware.base import BaseHTTPMiddleware
 import time
 import logging
 import uuid
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - [%(request_id)s] %(message)s')
+request_id_var = contextvars.ContextVar("request_id", default="system")
+
+class RequestIdFilter(logging.Filter):
+    def filter(self, record):
+        record.request_id = request_id_var.get()
+        return True
+
+# Configure logging
+root_logger = logging.getLogger()
+# Clear existing handlers to prevent duplicates
+root_logger.handlers = []
+
+handler = logging.StreamHandler()
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - [%(request_id)s] %(message)s')
+handler.setFormatter(formatter)
+handler.addFilter(RequestIdFilter())
+root_logger.addHandler(handler)
+root_logger.setLevel(logging.INFO)
+
 logger = logging.getLogger("nextroute")
 
 class StructuredLoggingMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         req_id = str(uuid.uuid4())
+        token = request_id_var.set(req_id)
         
-        # Inject request_id into logging context via a thread-safe context var or simple dictionary trick if needed
-        # For simplicity in V1, we'll format it directly.
-        old_factory = logging.getLogRecordFactory()
-        def record_factory(*args, **kwargs):
-            record = old_factory(*args, **kwargs)
-            record.request_id = req_id
-            return record
-        logging.setLogRecordFactory(record_factory)
-
         start_time = time.time()
         logger.info(f"Incoming request: {request.method} {request.url.path}")
         
@@ -32,3 +43,6 @@ class StructuredLoggingMiddleware(BaseHTTPMiddleware):
         except Exception as e:
             logger.error(f"Request failed: {request.method} {request.url.path} - Error: {str(e)}", exc_info=True)
             raise e
+        finally:
+            request_id_var.reset(token)
+
